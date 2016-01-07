@@ -81,9 +81,9 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   perm = req.user.auth.edit
-  var authOk = req.body.series && perm.indexOf(req.body.series) !== -1
+  var authOk = req.body.series && req.body.series !== undefined && perm.indexOf(req.body.series) !== -1
   authOk = authOk || req.user.auth.admin
-  if(authOk){
+  if(!authOk){
     res.status(400)
     res.json({})
     return
