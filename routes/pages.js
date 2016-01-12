@@ -2,7 +2,7 @@ var express = require('express')
 var Router = express.Router;
 
 var Page = require('../models/page.js')
-var Series = require('../models/series')
+var Series = require('../models/series.js')
 
 function getSeries(pages, callback){//callback(err, series)
   var query = {}
