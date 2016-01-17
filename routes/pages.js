@@ -111,6 +111,11 @@ router.get('/:id', function(req, res, next) {
   Page.findOne(query,
     function (err, page) {
       if (err) return next(err);
+      if(!page){
+        res.status(500)
+        res.json({})
+        return
+      }
       getSeries(page, function(err, series){
         if(err) return next(err);
         console.log(page)
