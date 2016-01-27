@@ -20,7 +20,7 @@ function getSeries(pages, callback){//callback(err, series)
     query._id = pages.series
   }
   
-  Series.findOne(query,
+  Series.find(query,
     function (err, series) {
       if (err){
         callback(err, [])
