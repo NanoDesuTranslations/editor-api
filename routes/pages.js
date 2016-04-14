@@ -1,40 +1,40 @@
-var express = require('express')
+var express = require('express');
 var Router = express.Router;
 
-var Page = require('../models/page.js')
-var Series = require('../models/series.js')
+var Page = require('../models/page.js');
+var Series = require('../models/series.js');
 
 function getSeries(pages, callback){//callback(err, series)
-  var query = {}
+  var query = {};
   if(Array.isArray(pages)){
-    var series = new Set()
+    var series = new Set();
     pages.forEach( function(page, i){
       if(page.series){
-        series.add(page.series)
+        series.add(page.series);
       }
-    })
-    series = Array.from(series)
+    });
+    series = Array.from(series);
     
-    query._id = {$in:series}
+    query._id = {$in:series};
   }else{
-    query._id = pages.series
+    query._id = pages.series;
   }
   
   Series.find(query,
     function (err, series) {
       if (err){
-        callback(err, [])
+        callback(err, []);
         return;
       }
-      //res.json(post);
-      callback(false, series)
+      
+      callback(false, series);
     }
   );
 }
 
-router = Router()
+router = Router();
 
-router.get('/old', function(req, res, next) {
+/*router.get('/old', function(req, res, next) {
   Page.find({}, {content:0},
   //Page.find({series:2}, {content:0},
     function (err, pages) {
@@ -52,7 +52,7 @@ router.post('/old', function(req, res, next) {
       res.json(post);
     }
   );
-});
+});*/
 
 router.get('/', function(req, res, next) {
   var query = {};

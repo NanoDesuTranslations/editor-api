@@ -7,12 +7,10 @@ var bodyParser = require('body-parser');
 
 var config = require('config');
 
-/*var Db = require('tingodb')().Db,
-    assert = require('assert');
-
-var db = new Db('./db/test', {});*/
-
-var tungus = require('tungus');
+if(config.get("uri").indexOf("tingodb://") != -1){
+  var tungus = require('tungus');
+  console.log("Tungus Activated.");
+}
 var mongoose = require('mongoose');
 var mongooseHidden = require('mongoose-hidden')();
 
@@ -40,6 +38,9 @@ app.use("/pages", router);
 
 router = require('./routes/series.js');
 app.use("/series", router);
+
+router = require('./routes/build.js');
+app.use("/build", router);
 
 module.exports = app;
 
