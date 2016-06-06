@@ -4,6 +4,14 @@ var Router = express.Router;
 var Page = require('../models/page.js');
 var Series = require('../models/series.js');
 
+function dictBy(array, predicate){
+	var d = {};
+	array.forEach(function(v,i){
+		d[predicate(v)] = v;
+	});
+	return d;
+}
+
 function getSeries(pages, callback){//callback(err, series)
   var query = {};
   if(Array.isArray(pages)){
@@ -72,6 +80,7 @@ router.get('/', function(req, res, next) {
       if (err) return next(err);
       getSeries(pages, function(err, series){
         if(err) return next(err);
+        series = dictBy(series, function(v){return v.id})
         var data = {pages:pages, series:series}
         res.json(data);
       })
