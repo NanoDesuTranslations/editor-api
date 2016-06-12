@@ -42,6 +42,12 @@ app.use("/series", router);
 router = require('./routes/build.js');
 app.use("/build", router);
 
+var static_path = config.get('static-path')
+if(static_path){
+  router = express.static('../generator/build');
+  app.use('/test', router);
+}
+
 module.exports = app;
 
 app.set('port', config.get('port'));
