@@ -51,7 +51,8 @@ if(static_path){
 module.exports = app;
 
 app.set('port', config.get('port'));
+var bind_address = config.get('address') || undefined;
 
-var server = app.listen(app.get('port'), function() {
+var server = app.listen(app.get('port'), bind_address, function() {
   console.log('Express server listening on port ' + server.address().port);
 });
