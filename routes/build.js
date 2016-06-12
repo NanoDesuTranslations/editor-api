@@ -20,13 +20,19 @@ router.get("/", function(req, res, next){
   if(req.user.auth){
     if(config.has('build.type')){
       var type = config.get('build.type');
-      if(type == "exec" && config.has('build.path')){
-        var path = config.get('build.path');
+      if(type == "exec" && config.has('build.cmd')){
+        var cmd = config.get('build.cmd');
+        var options = {}
+        if(config.has('build.cwd')){
+          options.cwd = config.get('build.cwd')
+        }
+        options.detatched = true;
+        
         var p;
         if(config.has('build.args')){
-          p = spawn(path, config.get('build.args'));
+          p = spawn(cmd, config.get('build.args'), options);
         }else{
-          p = spawn(path, [], {detached:true});
+          p = spawn(cmd, [], options);
         }
         active = true;
         p.stdout.on('data', (data) => {
