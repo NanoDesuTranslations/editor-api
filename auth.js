@@ -1,6 +1,5 @@
 var fs = require('fs');
 var config = require('config');
-var auth_keys = JSON.parse(fs.readFileSync('./db/auth.json', 'utf8'));
 var bcrypt = require('bcryptjs');
 var jwt = require('jwt-simple');
 
