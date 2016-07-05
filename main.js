@@ -33,7 +33,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 var auth = require('./auth.js');
 app.use(auth.middleware);
 
-var router = require('./routes/pages.js');
+var router = require('./routes/user.js');
+app.use("/user", router);
+
+router = require('./routes/pages.js');
 app.use("/pages", router);
 
 router = require('./routes/series.js');
