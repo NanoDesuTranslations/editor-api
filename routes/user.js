@@ -34,7 +34,7 @@ router.post('/login', function(req, res, next){
         return;
       }
       
-      var token = auth.create_session(user);
+      var token = auth.create_token(user);
       res.json({
         permissions: user.perms,
         token: token

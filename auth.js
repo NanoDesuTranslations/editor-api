@@ -22,25 +22,24 @@ check_password = function(password, hash, callback){
   });
 };
 
-create_session = function(user){
+create_token = function(user){
   var payload = {
     username: user.username,
+    permissions: user.perms,
     created: Date.now()
   };
   var token = jwt.encode(payload, secret);
-  sessions[user.username] = token;
   return token;
 };
 
-check_session = function(user, token){
+decode_token = function(token){
   var payload;
   try{
     payload = jwt.decode(token, secret);
   }catch(e){
     return false;
   }
-  if(payload.username != user){return false;}
-  return true;
+  return payload;
 };
 
 middleware = function(req, res, next){
@@ -53,18 +52,18 @@ middleware = function(req, res, next){
     delete req.body.auth;
   }
   
-  var user = {};
-  user.auth = false;
-  if(!token){
-    user.auth = false;
-  }else{
-    if(auth_keys[token]){
-        user.auth = auth_keys[token];
-    }else{
-        user.auth = false;
-    }
+  var payload = decode_token(token);
+  
+  if(!payload){
+    res.status(401);
+    res.end("Token invalid");
   }
-  if(user.auth === false){
+  
+  var user = {};
+  
+  if(payload.permissions){
+    user.auth = payload.permissions;
+  }else{
     user.auth.view = [];
     user.auth.edit = [];
     user.auth.admin = false;
@@ -78,6 +77,6 @@ module.exports = {
   middleware: middleware,
   hash_password: hash_password,
   check_password: check_password,
-  create_session: create_session,
-  check_session: check_session
+  create_token: create_token,
+  decode_token: decode_token
 };
