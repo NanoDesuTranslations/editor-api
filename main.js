@@ -33,6 +33,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 var router = require('./routes/user.js');
 app.use("/user", router);
 
+var static_path = config.get('static-path');
+if(static_path){
+  router = express.static(static_path);
+  app.use('/test', router);
+}
+
 var auth = require('./auth.js');
 app.use(auth.middleware);
 
@@ -44,12 +50,6 @@ app.use("/series", router);
 
 router = require('./routes/build.js');
 app.use("/build", router);
-
-var static_path = config.get('static-path')
-if(static_path){
-  router = express.static('../generator/build');
-  app.use('/test', router);
-}
 
 module.exports = app;
 
