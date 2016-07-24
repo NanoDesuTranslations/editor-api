@@ -6,8 +6,8 @@ var userSchema = new Schema({
     username: {type: String, index:true, unique:true},
     password_hash: {type: String},
     perms: {
-        view:[{type: Number}],
-        edit:[{type: Number}],
+        view:[{type: String}],
+        edit:[{type: String}],
         admin:{type: Boolean}
     }
 }, {toJSON:{virtuals:true}, toObject:{virtuals:true}});
