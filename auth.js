@@ -56,6 +56,7 @@ middleware = function(req, res, next){
   if(!payload){
     res.status(401);
     res.end("Token invalid");
+    return;
   }
   
   var user = {};
