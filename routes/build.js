@@ -71,10 +71,10 @@ router.get("/deploy", function(req, res, next){
     return;
   }
   
-  if(req.user.auth.admin){
-    res.status(401)
-    res.end()
-    return
+  if(!req.user.auth.admin){
+    res.status(401);
+    res.end();
+    return;
   }
   
   if(config.has('deploy.type')){
