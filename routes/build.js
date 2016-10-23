@@ -48,10 +48,15 @@ router.get("/", function(req, res, next){
         p.on('exit', (code) => {
           console.log('Exit', code);
           active = false;
-          res.end("End");
+          if(code !== 0){
+            res.end("Error");
+          }else{
+            res.end("End");
+          }
         });
         p.on('error', (err) => {
           console.log('Failed to start child process.', err);
+          res.status(500);
           res.end("Error");
         });
       }
@@ -103,10 +108,15 @@ router.get("/deploy", function(req, res, next){
       p.on('exit', (code) => {
         console.log('Exit', code);
         active = false;
-        res.end("End");
+        if(code !== 0){
+          res.end("Error");
+        }else{
+          res.end("End");
+        }
       });
       p.on('error', (err) => {
         console.log('Failed to start child process.', err);
+        res.status(500);
         res.end("Error");
       });
     }
