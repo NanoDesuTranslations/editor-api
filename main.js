@@ -37,6 +37,10 @@ var static_path = config.get('static-path');
 if(static_path){
   router = express.static(static_path);
   app.use('/test', router);
+  app.use('/test', function(req, res){
+    res.status(404);
+    res.end("Page not found.")
+  });
 }
 
 var auth = require('./auth.js');
