@@ -51,6 +51,9 @@ app.use("/series", router);
 router = require('./routes/build.js');
 app.use("/build", router);
 
+router = require('./routes/admin.js');
+app.use("/admin", router)
+
 module.exports = app;
 
 app.set('port', config.get('port'));
