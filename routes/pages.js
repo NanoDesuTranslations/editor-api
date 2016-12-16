@@ -40,6 +40,37 @@ function getSeries(pages, callback){//callback(err, series)
   );
 }
 
+function getSeriesById(ids, callback){//callback(err, series)
+  var query = {};
+  if(Array.isArray(ids)){
+    // var series = new Set();
+    // pages.forEach( function(page, i){
+    //   if(page.series){
+    //     series.add(page.series);
+    //   }
+    // });
+    var series = new Set(ids);
+    series = Array.from(series);
+    
+    query._id = {$in:series};
+  }else if(ids === true){
+    //load all series
+  }else{
+    query._id = ids;
+  }
+  
+  Series.find(query,
+    function (err, series) {
+      if (err){
+        callback(err, []);
+        return;
+      }
+      
+      callback(false, series);
+    }
+  );
+}
+
 router = Router();
 
 /*router.get('/old', function(req, res, next) {
@@ -78,7 +109,9 @@ router.get('/', function(req, res, next) {
   //Page.find({series:2}, {content:0},
     function (err, pages) {
       if (err) return next(err);
-      getSeries(pages, function(err, series){
+      //getSeries(pages, function(err, series){
+      var ids = req.user.auth.admin || req.user.auth.view
+      getSeriesById(ids, function(err, series){
         if(err) return next(err);
         series = dictBy(series, function(v){return v.id})
         var data = {pages:pages, series:series}
