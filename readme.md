@@ -10,7 +10,7 @@ to use add db/auth.json
 config/local.hjson
 
 ```
-uri: mongodb://user:pass@host:port
+uri: mongodb://user:pass@host:port/database
 static-path: ../generator/build //served at /test
 build:{
   type:exec
