@@ -7,24 +7,34 @@ router = Router();
 router.get('/:site', function(req, res, next) {
   console.log('Starting to get posts');
   getPosts(req.params.site)
-    .then(x => {
-      let result = {};
-      console.log(x);
-      x.forEach(function(element) {
+    .then(result => {
+      let pages = new Map();
+      let posts = result.filter(x => x.type == 'post');
+      let pagesArray = result.filter(x => x.type == 'page');
+      
+      pagesArray.forEach(function(element) {
         element.children = [];
-        result[element.ID] = element;
+        pages.set(element.ID, element);
       }, this);
-      res.json(result);
-    });
+      
+      for(var [k, v] of pages) {
+        if(v.parent) {
+          pages.get(v.parent.ID).children.push(v);
+        }
+      }
+      
+      res.json(pagesArray);
+    })
+    .catch(next);
 });
 
 var getPosts = function(site) {
   let promise = new Promise((resolve, reject) => {
     let blog = wpcom.site( site );
     let result = [];
-    blog.postsList({type:'any', number:100, field:"ID,title,date,content,slug,type,parent,menu_order"})
+    blog.postsList({type:'any', number:100, fields: "ID,title,date,content,slug,type,parent,menu_order"})
     .then(result => {
-      console.log('Got posts');
+      // TODO: handle blogs with postcount over 100
       resolve(result.posts);
     })
     .catch(error => reject(error));
