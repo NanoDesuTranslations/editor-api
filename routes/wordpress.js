@@ -8,14 +8,16 @@ router = Router();
 
 router.get('/:series/:site', function (req, res, next) {
   console.log('Starting to get posts');
-  Series.findOne({ '_id': req.params.series },
+  Series.findOne({
+      '_id': req.params.series
+    },
     function (err, series) {
       if (err) {
         return next(err);
       }
-      console.log(series);
       getPosts(req.params.site)
         .then(result => {
+          console.log(result.length);
           let pages = new Map();
           let posts = result.filter(x => x.type == 'post');
           let pagesArray = result.filter(x => x.type == 'page');
@@ -32,7 +34,7 @@ router.get('/:series/:site', function (req, res, next) {
           }
 
           posts.forEach(x => {
-            createPost(series, x);
+            createPost(x, series);
           });
 
           res.json(pagesArray);
@@ -41,35 +43,70 @@ router.get('/:series/:site', function (req, res, next) {
     });
 });
 
-var createPost = function(series, data) {
-  let insert = { 
-    content: data.content,
-    series: series.id,
-    meta: { 
-     title: data.title,
-     nav_title: data.slug,
-     status: 9,
-     created: Math.floor(new Date() / 1000),
-     updated: null,
-     deleted: false,
-     blog: { 
-       pinned: 0, 
-       published_date: new Date(data.date).getTime() / 1000,
-       author: 'demo' 
-      } 
-    } 
+var createPost = function (data, series) {
+  let insert = createPageTemplate(data, series);
+  insert.meta.blog = {
+    pinned: 0,
+    published_date: new Date(data.date).getTime() / 1000,
+    author: 'demo'
   };
   Page.create(insert);
+}
+
+var createPage = function (data, series, parent) {
+  let insert = createPageTemplate(data, series);
+  insert.meta.order = 0;
+  insert.meta.blog = false;
+}
+
+var createPageTemplate = function (data, series) {
+  let template = {
+    content: data.content,
+    series: series.id,
+    meta: {
+      title: data.title,
+      nav_title: null,
+      status: data.status == 'publish' ? 9 : 5,
+      created: Math.floor(new Date() / 1000),
+      path: data.slug,
+      updated: null,
+      deleted: false,
+    }
+  };
+  return template;
 }
 
 var getPosts = function (site) {
   let promise = new Promise((resolve, reject) => {
     let blog = wpcom.site(site);
     let result = [];
-    blog.postsList({ type: 'any', number: 100, fields: "ID,title,date,content,slug,type,parent,menu_order" })
+    blog.postsList({
+        type: 'any',
+        number: 100,
+        fields: "ID,title,date,content,slug,type,status,parent,menu_order"
+      })
       .then(result => {
-        // TODO: handle blogs with postcount over 100
-        resolve(result.posts);
+        if (result.found > 100) {
+          let promises = [];
+          let posts = result.posts;
+          for (let i = 2; i <= Math.ceil(result.found / 100); i++) {
+            promises.push(blog.postsList({
+              page: i,
+              type: 'any',
+              number: 100,
+              fields: "ID,title,date,content,slug,type,status,parent,menu_order"
+            }));
+          }
+          console.log(promises.length);
+          Promise.all(promises)
+            .then(results => {
+              results.forEach(x => posts = posts.concat(x.posts));
+              resolve(posts);
+            })
+            .catch(error => reject(error));
+        } else {
+          resolve(result.posts);
+        }
       })
       .catch(error => reject(error));
   });
