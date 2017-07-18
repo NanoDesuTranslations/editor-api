@@ -51,12 +51,12 @@ router.get('/:series/:site', function (req, res, next) {
 });
 
 // create blog post
-var createPost = function (data, series) {
-  let insert = createPageTemplate(data, series);
+var createPost = function (post, series) {
+  let insert = createPageTemplate(post, series);
   insert.meta.blog = {
     pinned: 0,
-    published_date: new Date(data.date).getTime() / 1000,
-    author: 'demo' // TODO: get current user
+    published_date: new Date(post.date).getTime() / 1000,
+    author: post.author.name
   };
   Page.create(insert); // TODO: add some sort of error handling/progress watching?
 }
@@ -123,6 +123,7 @@ var createPageTemplate = function (data, series) {
 
 // gets posts from worpress
 var getPosts = function (site) {
+  let fieldList = "ID,title,date,content,slug,type,status,parent,menu_order,author";
   let promise = new Promise((resolve, reject) => {
     let blog = wpcom.site(site);
     let result = [];
@@ -130,7 +131,7 @@ var getPosts = function (site) {
     blog.postsList({
         type: 'any',
         number: 100,
-        fields: "ID,title,date,content,slug,type,status,parent,menu_order"
+        fields: fieldList
       })
       .then(result => {
         // can only get 100 posts with one request so if there are more posts need to do additional requests
@@ -144,7 +145,7 @@ var getPosts = function (site) {
               page: i,
               type: 'any',
               number: 100,
-              fields: "ID,title,date,content,slug,type,status,parent,menu_order"
+              fields: fieldList
             }));
           }
           
