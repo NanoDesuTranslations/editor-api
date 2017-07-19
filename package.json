@@ -14,7 +14,6 @@
     "mongoose": "^4.6.5",
     "mongoose-hidden": "^0.5.2",
     "morgan": "^1.8.2",
-    "npm": "^5.0.4",
     "tingodb": "^0.4.2",
     "tungus": "0.0.5",
     "wpcom": "^5.4.0"
