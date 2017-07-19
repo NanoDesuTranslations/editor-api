@@ -1,20 +1,20 @@
-var express = require('express')
+var express = require("express");
 var Router = express.Router;
 
-var Series = require('../models/series.js')
+var Series = require("../models/series.js");
 
-router = Router()
+router = Router();
 
-router.use(function(req, res, next){
-  if(!req.user.auth.admin){
-    res.status(400)
-    res.end()
-    return
+router.use(function (req, res, next) {
+  if (!req.user.auth.admin) {
+    res.status(400);
+    res.end();
+    return;
   }
-  next()
-})
+  next();
+});
 
-router.get('/', function(req, res, next) {
+router.get("/", function (req, res, next) {
   Series.find(
     function (err, pages) {
       if (err) return next(err);
@@ -23,7 +23,7 @@ router.get('/', function(req, res, next) {
   );
 });
 
-router.post('/', function(req, res, next) {
+router.post("/", function (req, res, next) {
   Series.create(req.body,
     function (err, post) {
       if (err) return next(err);
@@ -32,8 +32,8 @@ router.post('/', function(req, res, next) {
   );
 });
 
-router.get('/:id', function(req, res, next) {
-  Series.findOne({'_id':req.params.id},
+router.get("/:id", function (req, res, next) {
+  Series.findOne({"_id": req.params.id},
     function (err, post) {
       if (err) return next(err);
       res.json(post);
@@ -41,18 +41,18 @@ router.get('/:id', function(req, res, next) {
   );
 });
 
-router.put('/:id', function(req, res, next) {
-  Series.findOneAndUpdate({'_id':req.params.id}, req.body, function (err, post) {
+router.put("/:id", function (req, res, next) {
+  Series.findOneAndUpdate({"_id": req.params.id}, req.body, function (err, post) {
     if (err) return next(err);
     res.json(post);
   });
 });
 
-router.delete('/:id', function(req, res, next) {
-  Series.findOneAndRemove({'_id':req.params.id}, req.body, function (err, post) {
+router.delete("/:id", function (req, res, next) {
+  Series.findOneAndRemove({"_id": req.params.id}, req.body, function (err, post) {
     if (err) return next(err);
     res.json(post);
   });
 });
 
-module.exports = router
+module.exports = router;

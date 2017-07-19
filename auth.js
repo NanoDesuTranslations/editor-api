@@ -1,12 +1,13 @@
-var fs = require('fs');
-var config = require('config');
-var bcrypt = require('bcryptjs');
-var jwt = require('jwt-simple');
+var fs = require("fs");
+var config = require("config");
+var bcrypt = require("bcryptjs");
+var jwt = require("jwt-simple");
 
 var secret = config.get("secret");
-if(!secret){
-  console.log("No secret set, this is insecure.");
-  secret = "Out of sight, out of mind";
+
+if (!secret) {
+  console.log("No secret set, exiting.");
+  process.exit(1); // Why would we continue if our application is insecure?
 }
 
 hash_password = function(password, callback){
@@ -33,9 +34,9 @@ create_token = function(user){
 
 decode_token = function(token){
   var payload;
-  try{
+  try {
     payload = jwt.decode(token, secret);
-  }catch(e){
+  } catch (e) {
     return false;
   }
   return payload;
@@ -43,40 +44,40 @@ decode_token = function(token){
 
 middleware = function(req, res, next){
   var token = false;
-  if(req.headers.authorization){
+  if (req.headers.authorization) {
     token = req.headers.authorization;
     delete req.headers.authorization;
-  }else if(req.body.auth){
+  } else if (req.body.auth) {
     token = req.body.auth;
     delete req.body.auth;
   }
-  
+
   var payload = decode_token(token);
-  
-  if(!payload){
+
+  if (!payload) {
     res.status(401);
     res.end("Token invalid");
     return;
   }
-  
+
   var user = {};
-  
-  if(payload.permissions){
+
+  if (payload.permissions) {
     user.auth = payload.permissions;
-  }else{
+  } else {
     user.auth.view = [];
     user.auth.edit = [];
     user.auth.admin = false;
   }
-  
+
   req.user = user;
   next();
 };
 
 module.exports = {
-  middleware: middleware,
-  hash_password: hash_password,
-  check_password: check_password,
-  create_token: create_token,
-  decode_token: decode_token
+  middleware,
+  hash_password,
+  check_password,
+  create_token,
+  decode_token
 };

@@ -1,4 +1,4 @@
-node_modules
-config/local*.*
 db
 public
+node_modules
+config/local*.*

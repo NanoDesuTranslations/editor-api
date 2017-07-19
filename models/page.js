@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-var mongooseHidden = require('mongoose-hidden')();
+var mongooseHidden = require("mongoose-hidden")();
 
 var pageSchema = new Schema({
     meta: {type:Object}
@@ -11,4 +11,4 @@ var pageSchema = new Schema({
 
 pageSchema.plugin(mongooseHidden, { defaultHidden: { _id:true, __v:true } });
 
-module.exports = mongoose.model('Page', pageSchema);
+module.exports = mongoose.model("Page", pageSchema);

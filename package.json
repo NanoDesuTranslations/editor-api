@@ -15,5 +15,8 @@
     "morgan": "^1.6.1",
     "tingodb": "^0.4.2",
     "tungus": "0.0.5"
+  },
+  "devDependencies": {
+    "eslint": "^4.2.0"
   }
 }
