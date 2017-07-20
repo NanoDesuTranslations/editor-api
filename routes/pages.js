@@ -69,7 +69,7 @@ function getSeriesById (ids, callback) { // callback(err, series)
   );
 }
 
-router = Router();
+var router = Router();
 
 /* router.get('/old', function(req, res, next) {
   Page.find({}, {content:0},
@@ -94,7 +94,7 @@ router.post('/old', function(req, res, next) {
 router.get("/", function (req, res, next) {
   var query = {};
   if (!req.user.auth.admin) {
-    perm = req.user.auth.view;
+    var perm = req.user.auth.view;
     if (!perm) {
       res.status(400);
       res.json({});
@@ -120,7 +120,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/", function (req, res, next) {
-  perm = req.user.auth.edit;
+  var perm = req.user.auth.edit;
   var authOk = req.body.series && req.body.series !== undefined && perm.indexOf(req.body.series) !== -1;
   authOk = authOk || req.user.auth.admin;
   if (!authOk) {

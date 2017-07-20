@@ -3,7 +3,7 @@ var config = require("config");
 var spawn = require("child_process").spawn;
 var Router = express.Router;
 
-router = Router();
+var router = Router();
 
 module.exports = router;
 

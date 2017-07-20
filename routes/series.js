@@ -3,7 +3,7 @@ var Router = express.Router;
 
 var Series = require("../models/series.js");
 
-router = Router();
+var router = Router();
 
 router.use(function (req, res, next) {
   if (!req.user.auth.admin) {

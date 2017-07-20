@@ -4,7 +4,7 @@ var Router = express.Router;
 var User = require("../models/user.js");
 var auth = require("../auth.js");
 
-router = Router();
+var router = Router();
 module.exports = router;
 
 router.use(function(req, res, next) {
