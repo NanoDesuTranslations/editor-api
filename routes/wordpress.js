@@ -66,9 +66,9 @@ var createPages = function (pages, series, parent) {
   let hierarchy = series.config.hierarchy;
   // sort current pages to get correct insert order
   pages = pages.sort((a, b) => {
-    if(a.menu_order != b.menu_order) {
+    if (a.menu_order != b.menu_order) {
       return a.menu_order - b.menu_order;
-    }else {
+    } else {
       return a.title.localeCompare(b.title);
     }
   });
@@ -76,7 +76,7 @@ var createPages = function (pages, series, parent) {
   for (let i = 0; i < pages.length; i++) {
     var insert = createPageTemplate(pages[i], series);
     insert.meta.blog = false;
-    
+
     // first level pages wil have only one level of hierarchy
     if (parent == null) {
       insert.meta[hierarchy[0]] = i + 1;
@@ -87,7 +87,7 @@ var createPages = function (pages, series, parent) {
         // copy existing hierarchy from parent
         if (parent.meta[hierarchyLevel] != null) {
           insert.meta[hierarchyLevel] = parent.meta[hierarchyLevel];
-        // add missing hierarchy level
+          // add missing hierarchy level
         } else {
           insert.meta[hierarchyLevel] = i + 1;
           break;
@@ -118,6 +118,7 @@ var createPageTemplate = function (data, series) {
       deleted: false,
     }
   };
+  template.content = clean(template.content);
   return template;
 }
 
@@ -127,7 +128,7 @@ var getPosts = function (site) {
   let promise = new Promise((resolve, reject) => {
     let blog = wpcom.site(site);
     let result = [];
-    
+
     blog.postsList({
         type: 'any',
         number: 100,
@@ -138,7 +139,7 @@ var getPosts = function (site) {
         if (result.found > 100) {
           let promises = [];
           let posts = result.posts;
-          
+
           // prepare requests for getting leftover posts
           for (let i = 2; i <= Math.ceil(result.found / 100); i++) {
             promises.push(blog.postsList({
@@ -148,7 +149,7 @@ var getPosts = function (site) {
               fields: fieldList
             }));
           }
-          
+
           //execute requests
           Promise.all(promises)
             .then(results => {
@@ -164,6 +165,17 @@ var getPosts = function (site) {
       .catch(error => reject(error));
   });
   return promise;
+}
+
+const navLinkRegexes = [
+  new RegExp('(?:<p>)?<a href="[^"]+?" \/>Previous Page</a><br \/>[\n]?', 'gi'),
+  new RegExp('<a href="[^"]+?" \/>Next Page</a>(?:<\/p>)?[\n]?', 'gi')
+];
+var clean = function (content) {
+  navLinkRegexes.forEach(regex => {
+    content = content.replace(regex, '');
+  });
+  return content;
 }
 
 module.exports = router;
