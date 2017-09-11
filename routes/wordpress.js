@@ -169,8 +169,11 @@ var getPosts = function (site) {
 
 const navLinkRegexes = [
   new RegExp('(?:<p>)?<a href="[^"]+?" \/>Previous Page</a><br \/>[\n]?', 'gi'),
-  new RegExp('<a href="[^"]+?" \/>Next Page</a>(?:<\/p>)?[\n]?', 'gi')
+  new RegExp('(?:<p>)?Previous Page<br \/>[\n]?', 'gi'),
+  new RegExp('<a href="[^"]+?" \/>Next Page</a>(?:<\/p>)?[\n]?', 'gi'),
+  new RegExp('Next Page(?:<\/p>)?[\n]?', 'gi')
 ];
+// clean up page content (nav links right now)
 var clean = function (content) {
   navLinkRegexes.forEach(regex => {
     content = content.replace(regex, '');
