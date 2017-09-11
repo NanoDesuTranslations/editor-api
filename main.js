@@ -56,7 +56,10 @@ router = require('./routes/build.js');
 app.use("/build", router);
 
 router = require('./routes/admin.js');
-app.use("/admin", router)
+app.use("/admin", router);
+
+router = require('./routes/wordpress.js');
+app.use("/wordpress", router);
 
 module.exports = app;
 
