@@ -6,6 +6,7 @@ var pageSchema = new Schema({
     meta: {type:Object}
   , series: {type: String, index:true}
   , content: {type: String, default:null}
+  , uuid: {type: String}
   //, released: Date
 }, {toJSON:{virtuals:true}, toObject:{virtuals:true}});
 

@@ -1,5 +1,6 @@
 var express = require('express');
 var Router = express.Router;
+var uuid_v1 = require('uuid/v1');
 
 var Page = require('../models/page.js');
 var Series = require('../models/series.js');
@@ -130,6 +131,7 @@ router.post('/', function(req, res, next) {
     res.json({})
     return
   }
+  req.body.uuid = uuid_v1();
   
   Page.create(req.body,
     function (err, page) {
@@ -178,6 +180,7 @@ router.put('/:id', function(req, res, next) {
     query.series = {$in:req.user.auth.edit}
   }
   
+  req.body.uuid = uuid_v1();
   Page.findOneAndUpdate(query, req.body, function (err, page) {
     if (err) return next(err);
     if(!page){

@@ -5,6 +5,7 @@ var mongooseHidden = require('mongoose-hidden')();
 var seriesSchema = new Schema({
     config: {type:Object}
   , name: {type: String}
+  , uuid: {type: String}
   //, released: Date
 }, {toJSON:{virtuals:true}, toObject:{virtuals:true}})
 

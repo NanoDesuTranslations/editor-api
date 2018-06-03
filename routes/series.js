@@ -1,5 +1,6 @@
 var express = require('express')
 var Router = express.Router;
+var uuid_v1 = require('uuid/v1');
 
 var Series = require('../models/series.js')
 
@@ -24,6 +25,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+  req.body.uuid = uuid_v1();
   Series.create(req.body,
     function (err, post) {
       if (err) return next(err);
@@ -42,6 +44,7 @@ router.get('/:id', function(req, res, next) {
 });
 
 router.put('/:id', function(req, res, next) {
+  req.body.uuid = uuid_v1();
   Series.findOneAndUpdate({'_id':req.params.id}, req.body, function (err, post) {
     if (err) return next(err);
     res.json(post);
