@@ -43,6 +43,9 @@ if(static_path){
   });
 }
 
+single_page = require('./routes/single_page.js')
+app.use("/p", single_page.router)
+
 var auth = require('./auth.js');
 app.use(auth.middleware);
 

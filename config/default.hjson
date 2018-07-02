@@ -4,3 +4,5 @@ uri:false
 public-path: ./public
 static-path: false
 secret: false
+single_page_host: null
+single_page_port: null
