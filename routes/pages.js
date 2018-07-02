@@ -162,7 +162,6 @@ router.get('/:id', function(req, res, next) {
       }
       getSeries(page, function(err, series){
         if(err) return next(err);
-        console.log(page)
         res.json({page:page, series:series});
       })
     }
