@@ -61,6 +61,9 @@ app.use("/build", router);
 router = require('./routes/admin.js');
 app.use("/admin", router)
 
+router = require('./routes/img_serve.js');
+app.use("/img", router)
+
 module.exports = app;
 
 app.set('port', config.get('port'));
