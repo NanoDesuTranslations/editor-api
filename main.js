@@ -43,6 +43,9 @@ if(static_path){
   });
 }
 
+img_router = require('./routes/img_serve.js');
+app.use("/img/auth_ui", img_router.auth_ui)
+
 single_page = require('./routes/single_page.js')
 app.use("/p", single_page.router)
 
@@ -61,8 +64,8 @@ app.use("/build", router);
 router = require('./routes/admin.js');
 app.use("/admin", router)
 
-router = require('./routes/img_serve.js');
-app.use("/img", router)
+
+app.use("/img", img_router.router);
 
 module.exports = app;
 

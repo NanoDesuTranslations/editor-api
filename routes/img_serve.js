@@ -6,7 +6,6 @@ var express = require('express');
 var Router = express.Router;
 
 router = Router();
-module.exports = router;
 
 var secret = config.get("img_secret");
 var host = config.get("img_host")
@@ -43,3 +42,34 @@ router.get('/auth', function(req, res, next) {
     res.json(data);
 })
 
+let auth_ui = function(req, res, next) {
+    let data = `
+<script>
+fetch('./auth', {headers: {'Authorization': localStorage.getItem('token')}})
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        console.log(data);
+        return data;
+    })
+    .then(function(data) {
+        var elem = document.createElement("a");
+        elem.setAttribute('href', data.url);
+        elem.setAttribute('target', '_blank');
+        elem.innerText = "CLICK HERE";
+        document.body.appendChild(elem);
+    });
+</script>
+"user interface"
+`
+    
+    res.end(data);
+};
+
+router.get('/auth_ui', auth_ui);
+
+module.exports = {
+    'router': router,
+    'auth_ui': auth_ui,
+};
